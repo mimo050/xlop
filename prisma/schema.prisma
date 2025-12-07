@@ -1,0 +1,85 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Certificate {
+  id               String   @id @default(cuid())
+  name             String
+  provider         String?
+  status           String
+  maxDevices       Int?
+  usedDevicesCount Int      @default(0)
+  expiresAt        DateTime?
+  filePath         String?
+  notes            String?
+  orders           Order[]
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model App {
+  id          String   @id @default(cuid())
+  displayName String
+  slug        String   @unique
+  version     String
+  bundleId    String?
+  status      String
+  price       Int
+  filePath    String
+  orders      Order[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Order {
+  id               String   @id @default(cuid())
+  udid             String
+  email            String?
+  certificateId    String
+  appId            String
+  status           String
+  totalAmount      Int
+  currency         String
+  paymentProvider  String
+  paymentReference String?
+  signedFilePath   String?
+  downloadToken    String?
+  downloadExpiresAt DateTime?
+  failureReason    String?
+  certificate      Certificate @relation(fields: [certificateId], references: [id])
+  app              App         @relation(fields: [appId], references: [id])
+  paymentEvents    PaymentEvent[]
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model PaymentEvent {
+  id        String   @id @default(cuid())
+  orderId   String
+  provider  String
+  eventType String
+  rawPayload Json
+  order     Order   @relation(fields: [orderId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+model Settings {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

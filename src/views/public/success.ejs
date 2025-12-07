@@ -1,0 +1,18 @@
+<% layout('layout') %>
+<section class="content">
+  <div class="card">
+    <h2>Order Success</h2>
+    <p>Order ID: <strong><%= order.id %></strong></p>
+    <p>Status: <span class="pill <%= order.status %>"><%= order.status %></span></p>
+    <p>App: <%= order.app?.displayName %> (<%= order.app?.version %>)</p>
+    <p>Certificate: <%= order.certificate?.name %></p>
+    <% if (order.status === 'completed' && order.downloadToken) { %>
+      <a class="primary" href="/download/<%= order.downloadToken %>">Download Signed IPA</a>
+      <p class="muted">Expires at <%= new Date(order.downloadExpiresAt).toLocaleString() %></p>
+    <% } else if (order.status === 'signing' || order.status === 'paid') { %>
+      <p>Your IPA is being signed. Please refresh this page soon.</p>
+    <% } else if (order.status === 'failed') { %>
+      <p class="error-text">Signing failed: <%= order.failureReason %></p>
+    <% } %>
+  </div>
+</section>

@@ -1,0 +1,21 @@
+<% layout('layout') %>
+<section class="content">
+  <div class="card">
+    <h2>Order <%= order.id %></h2>
+    <p>UDID: <code><%= order.udid %></code></p>
+    <p>App: <%= order.app?.displayName %> (<%= order.app?.version %>)</p>
+    <p>Certificate: <%= order.certificate?.name %></p>
+    <p>Status: <span class="pill <%= order.status %>"><%= order.status %></span></p>
+    <p>Payment Provider: <%= order.paymentProvider %></p>
+    <p>Payment Ref: <%= order.paymentReference || '-' %></p>
+    <% if (order.failureReason) { %>
+      <p class="error-text">Failure: <%= order.failureReason %></p>
+    <% } %>
+    <% if (order.downloadToken) { %>
+      <p>Download: <a href="/download/<%= order.downloadToken %>">Signed IPA</a></p>
+    <% } %>
+    <form method="POST" action="/admin/orders/<%= order.id %>/retry-signing">
+      <button class="secondary" type="submit">Retry Signing</button>
+    </form>
+  </div>
+</section>

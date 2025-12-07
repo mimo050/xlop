@@ -1,0 +1,22 @@
+<% layout('layout') %>
+<section class="content">
+  <div class="card">
+    <h2>Orders</h2>
+    <table>
+      <thead><tr><th>ID</th><th>UDID</th><th>App</th><th>Cert</th><th>Status</th><th>Created</th><th></th></tr></thead>
+      <tbody>
+        <% orders.forEach(order => { %>
+          <tr>
+            <td><%= order.id %></td>
+            <td><%= order.udid.slice(0,8) %>...</td>
+            <td><%= order.app?.displayName %></td>
+            <td><%= order.certificate?.name %></td>
+            <td><span class="pill <%= order.status %>"><%= order.status %></span></td>
+            <td><%= new Date(order.createdAt).toLocaleString() %></td>
+            <td><a href="/admin/orders/<%= order.id %>">View</a></td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</section>

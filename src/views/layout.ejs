@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= title || 'AppleP12 Sign' %></title>
+  <link rel="stylesheet" href="/css/main.css" />
+</head>
+<body class="theme-dark">
+  <header class="site-header">
+    <div class="logo-area">
+      <img src="/img/logo.svg" alt="logo" class="logo" />
+      <span>AppleP12 Sign</span>
+    </div>
+    <nav>
+      <a href="/">Public Site</a>
+      <a href="/admin">Admin</a>
+    </nav>
+  </header>
+  <main>
+    <%- body %>
+  </main>
+  <footer class="site-footer">
+    <div>© 2025 - AppleP12 Sign</div>
+    <div class="lang-switch">
+      <button class="active">English</button>
+      <button disabled>中文</button>
+    </div>
+  </footer>
+</body>
+</html>
