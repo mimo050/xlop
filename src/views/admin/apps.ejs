@@ -1,0 +1,49 @@
+<% layout('layout') %>
+<section class="content">
+  <div class="card">
+    <h2>Apps</h2>
+    <table>
+      <thead><tr><th>Name</th><th>Slug</th><th>Version</th><th>Status</th><th>Price</th><th>Actions</th></tr></thead>
+      <tbody>
+        <% apps.forEach(app => { %>
+          <tr>
+            <td><%= app.displayName %></td>
+            <td><%= app.slug %></td>
+            <td><%= app.version %></td>
+            <td><%= app.status %></td>
+            <td>$<%= (app.price/100).toFixed(2) %></td>
+            <td>
+              <form method="POST" action="/admin/apps/<%= app.id %>">
+                <input type="text" name="displayName" value="<%= app.displayName %>" />
+                <input type="text" name="slug" value="<%= app.slug %>" />
+                <input type="text" name="version" value="<%= app.version %>" />
+                <input type="text" name="bundleId" value="<%= app.bundleId || '' %>" />
+                <input type="number" name="price" value="<%= app.price %>" />
+                <select name="status">
+                  <option value="active" <%= app.status==='active'?'selected':'' %>>active</option>
+                  <option value="inactive" <%= app.status==='inactive'?'selected':'' %>>inactive</option>
+                </select>
+                <button class="secondary" type="submit">Save</button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+
+    <h3>Add App</h3>
+    <form method="POST" action="/admin/apps" enctype="multipart/form-data" class="form-grid">
+      <input type="text" name="displayName" placeholder="Display Name" required />
+      <input type="text" name="slug" placeholder="Slug" required />
+      <input type="text" name="version" placeholder="Version" required />
+      <input type="text" name="bundleId" placeholder="Bundle ID" />
+      <input type="number" name="price" placeholder="Price (cents)" required />
+      <select name="status">
+        <option value="active">active</option>
+        <option value="inactive">inactive</option>
+      </select>
+      <input type="file" name="ipaFile" accept=".ipa" required />
+      <button class="primary" type="submit">Upload</button>
+    </form>
+  </div>
+</section>

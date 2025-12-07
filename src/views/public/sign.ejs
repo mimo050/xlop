@@ -1,0 +1,70 @@
+<% layout('layout') %>
+<section class="hero">
+  <div class="card">
+    <h1>Signed IPA</h1>
+    <p class="muted">Get your favorite IPA signed for your UDID in minutes.</p>
+
+    <div class="form-group">
+      <label>UDID</label>
+      <div class="udid-row">
+        <input type="text" id="udid" placeholder="Paste your device UDID here" value="<%= prefillUdid || '' %>" />
+        <button class="secondary" onclick="window.open('/udid-help','_blank')">Get Device's UDID</button>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Cert <span class="pill">🛒 Purchased At AppleP12</span></label>
+      <select id="certificate">
+        <% certificates.forEach(cert => { %>
+          <option value="<%= cert.id %>"><%= cert.name %></option>
+        <% }) %>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>IPA</label>
+      <select id="app">
+        <% apps.forEach(app => { %>
+          <option value="<%= app.id %>"><%= app.slug %> - $<%= (app.price / 100).toFixed(2) %></option>
+        <% }) %>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Email (optional for receipt)</label>
+      <input type="email" id="email" placeholder="you@example.com" />
+    </div>
+
+    <button class="primary" id="signBtn">Sign Now</button>
+    <div id="error" class="error-text"></div>
+  </div>
+</section>
+
+<script>
+  const btn = document.getElementById('signBtn');
+  btn?.addEventListener('click', async () => {
+    const udid = document.getElementById('udid').value.trim();
+    const appId = document.getElementById('app').value;
+    const certificateId = document.getElementById('certificate').value;
+    const email = document.getElementById('email').value.trim();
+    const errEl = document.getElementById('error');
+    if (errEl) errEl.textContent = '';
+    btn.setAttribute('disabled', 'disabled');
+    btn.textContent = 'Processing...';
+    try {
+      const res = await fetch('/api/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ udid, appId, certificateId, email })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to create order');
+      window.location.href = data.checkoutUrl;
+    } catch (err) {
+      if (errEl) errEl.textContent = err.message || 'Something went wrong';
+    } finally {
+      btn.removeAttribute('disabled');
+      btn.textContent = 'Sign Now';
+    }
+  });
+</script>

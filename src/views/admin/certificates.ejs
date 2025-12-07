@@ -1,0 +1,45 @@
+<% layout('layout') %>
+<section class="content">
+  <div class="card">
+    <h2>Certificates</h2>
+    <table>
+      <thead><tr><th>Name</th><th>Status</th><th>Provider</th><th>Expires</th><th>Actions</th></tr></thead>
+      <tbody>
+        <% certificates.forEach(cert => { %>
+          <tr>
+            <td><%= cert.name %></td>
+            <td><%= cert.status %></td>
+            <td><%= cert.provider || '-' %></td>
+            <td><%= cert.expiresAt ? new Date(cert.expiresAt).toLocaleDateString() : '-' %></td>
+            <td>
+              <form method="POST" action="/admin/certificates/<%= cert.id %>">
+                <input type="text" name="name" value="<%= cert.name %>" />
+                <input type="text" name="provider" value="<%= cert.provider || '' %>" />
+                <input type="date" name="expiresAt" value="<%= cert.expiresAt ? cert.expiresAt.toISOString().slice(0,10) : '' %>" />
+                <select name="status">
+                  <option value="active" <%= cert.status==='active'?'selected':'' %>>active</option>
+                  <option value="inactive" <%= cert.status==='inactive'?'selected':'' %>>inactive</option>
+                </select>
+                <button class="secondary" type="submit">Save</button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+
+    <h3>Add Certificate</h3>
+    <form method="POST" action="/admin/certificates" class="form-grid">
+      <input type="text" name="name" placeholder="Name" required />
+      <input type="text" name="provider" placeholder="Provider" />
+      <input type="date" name="expiresAt" />
+      <input type="number" name="maxDevices" placeholder="Max devices" />
+      <textarea name="notes" placeholder="Notes"></textarea>
+      <select name="status">
+        <option value="active">active</option>
+        <option value="inactive">inactive</option>
+      </select>
+      <button class="primary" type="submit">Create</button>
+    </form>
+  </div>
+</section>

@@ -1,0 +1,20 @@
+<% layout('layout') %>
+<section class="content">
+  <div class="card">
+    <h2>Dashboard</h2>
+    <div class="stats-grid">
+      <div class="stat">Total Orders <strong><%= stats.totalOrders %></strong></div>
+      <div class="stat">Completed <strong><%= stats.completedOrders %></strong></div>
+      <div class="stat">Failed <strong><%= stats.failedOrders %></strong></div>
+      <div class="stat">Revenue (7d) <strong>$<%= (stats.revenueLast7Days/100).toFixed(2) %></strong></div>
+    </div>
+    <div>
+      <h3>Top Apps</h3>
+      <ul>
+        <% stats.topApps.forEach(item => { %>
+          <li><%= item.appId %> — <%= item._count.appId %> orders</li>
+        <% }) %>
+      </ul>
+    </div>
+  </div>
+</section>

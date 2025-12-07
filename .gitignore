@@ -1,0 +1,9 @@
+node_modules
+.env
+npm-debug.log*
+dist
+uploads/*
+!uploads/ipas
+!uploads/signed
+uploads/ipas/*.ipa
+uploads/signed/*.ipa
